@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Resume Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:#f2f2f2;
+}
+
+/* ===== FORM ===== */
+.form-section{
+    background:#fff;
+    padding:20px;
+}
+
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+button{
+    background:#222;
+    color:#fff;
+    border:none;
+    padding:10px 20px;
+    cursor:pointer;
+}
+
+/* ===== RESUME DESIGN ===== */
+.resume{
+    width:210mm;
+    height:297mm;
+    margin:20px auto;
+    background:#fff;
+    display:none;
+    padding:30px;
+    box-sizing:border-box;
+}
+
+.top-section{
+    display:flex;
+    align-items:center;
+    border-bottom:2px solid #000;
+    padding-bottom:15px;
+}
+
+.top-section img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-right:20px;
+}
+
+.name{
+    font-size:26px;
+    font-weight:600;
+}
+
+.title{
+    font-size:14px;
+    color:#555;
+}
+
+.section{
+    margin-top:20px;
+}
+
+.section h3{
+    border-bottom:1px solid #000;
+    padding-bottom:5px;
+    margin-bottom:10px;
+}
+
+.footer{
+    text-align:center;
+    font-size:12px;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- FORM -->
+<div class="form-section">
+<h2>Single Page Resume Builder</h2>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="text" id="title" placeholder="Professional Title">
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="phone" placeholder="Phone Number">
+
+<textarea id="summary" placeholder="Professional Summary"></textarea>
+
+<input type="text" id="skills" placeholder="Skills (comma separated)">
+<input type="text" id="education" placeholder="Education (comma separated)">
+<textarea id="experience" placeholder="Experience (comma separated)"></textarea>
+
+<input type="file" id="photoInput">
+
+<button onclick="generateResume()">Generate Resume</button>
+</div>
+
+<!-- RESUME PREVIEW -->
+<div class="resume" id="resume">
+
+<div class="top-section">
+<img id="previewPhoto">
+<div>
+<div class="name" id="r_name"></div>
+<div class="title" id="r_title"></div>
+<div id="r_email"></div>
+<div id="r_phone"></div>
+</div>
+</div>
+
+<div class="section">
+<h3>Professional Summary</h3>
+<div id="r_summary"></div>
+</div>
+
+<div class="section">
+<h3>Skills</h3>
+<div id="r_skills"></div>
+</div>
+
+<div class="section">
+<h3>Education</h3>
+<div id="r_education"></div>
+</div>
+
+<div class="section">
+<h3>Experience</h3>
+<div id="r_experience"></div>
+</div>
+
+<div class="footer">
+Designed & Developed by <strong>Mr. Shubh</strong>
+</div>
+
+</div>
+
+<button onclick="downloadPDF()" style="display:none;" id="pdfBtn">Download Resume PDF</button>
+
+<script>
+function generateResume(){
+
+document.getElementById("resume").style.display="block";
+document.getElementById("pdfBtn").style.display="block";
+
+r_name.innerText = name.value;
+r_title.innerText = title.value;
+r_email.innerText = email.value;
+r_phone.innerText = phone.value;
+r_summary.innerText = summary.value;
+
+let skillList = skills.value.split(",");
+r_skills.innerHTML="";
+skillList.forEach(s=>{
+r_skills.innerHTML += "• " + s + "<br>";
+});
+
+let eduList = education.value.split(",");
+r_education.innerHTML="";
+eduList.forEach(e=>{
+r_education.innerHTML += "• " + e + "<br>";
+});
+
+let expList = experience.value.split(",");
+r_experience.innerHTML="";
+expList.forEach(ex=>{
+r_experience.innerHTML += "• " + ex + "<br>";
+});
+
+let file = photoInput.files[0];
+if(file){
+let reader = new FileReader();
+reader.onload=function(e){
+previewPhoto.src = e.target.result;
+}
+reader.readAsDataURL(file);
+}
+}
+
+function downloadPDF(){
+html2pdf().from(document.getElementById("resume")).save("Resume.pdf");
+}
+</script>
+
+</body>
+</html>

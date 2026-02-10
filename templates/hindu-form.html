@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hindu Biodata Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Poppins;
+    background:#f4f4f4;
+}
+
+/* ===== FORM ===== */
+.form-section{
+    padding:20px;
+    background:white;
+}
+
+.form-section h2{
+    text-align:center;
+    color:#b22222;
+}
+
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+button{
+    background:#b22222;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    cursor:pointer;
+    margin-top:5px;
+}
+
+/* ===== BIODATA DESIGN ===== */
+.page{
+    width:210mm;
+    height:297mm;
+    margin:20px auto;
+    background:#fff;
+    border:14px solid transparent;
+    border-image:url("https://i.imgur.com/Z7AzH2c.png") 30 round;
+    display:none;
+    flex-direction:column;
+}
+
+.header{
+    background:linear-gradient(to right,#ff9933,#ffffff,#138808);
+    text-align:center;
+    padding:15px;
+}
+
+.header h2{
+    font-family:'Playfair Display';
+    margin:5px 0;
+}
+
+.photo{
+    text-align:center;
+    margin-top:10px;
+}
+
+.photo img{
+    width:150px;
+    height:150px;
+    object-fit:cover;
+    border-radius:50%;
+    border:4px solid #b22222;
+}
+
+.content{
+    padding:20px 30px;
+    flex:1;
+}
+
+.section-title{
+    font-weight:600;
+    border-left:4px solid #b22222;
+    padding-left:10px;
+    margin:10px 0;
+}
+
+.row{
+    display:flex;
+    font-size:14px;
+    margin-bottom:5px;
+}
+
+.label{
+    width:180px;
+    font-weight:500;
+}
+
+.footer{
+    text-align:center;
+    font-size:12px;
+    padding:10px;
+    border-top:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<!-- FORM AREA -->
+<div class="form-section">
+<h2>Hindu Biodata Form</h2>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="date" id="dob">
+<input type="text" id="birthplace" placeholder="Place of Birth">
+<input type="text" id="rashi" placeholder="Rashi">
+<input type="text" id="nakshatra" placeholder="Nakshatra">
+<input type="text" id="height" placeholder="Height">
+<input type="text" id="complexion" placeholder="Complexion">
+
+<input type="text" id="education" placeholder="Education (comma separated)">
+<input type="text" id="father" placeholder="Father Name">
+<input type="text" id="mother" placeholder="Mother Name">
+<input type="text" id="siblings" placeholder="Brothers & Sisters Detail">
+<textarea id="address" placeholder="Full Address"></textarea>
+
+<input type="file" id="photoInput">
+
+<button onclick="generateBiodata()">Generate Biodata</button>
+</div>
+
+
+<!-- BIODATA PREVIEW -->
+<div class="page" id="biodata">
+
+<div class="header">
+<div>॥ श्री गणेशाय नमः ॥</div>
+<h2>BIODATA</h2>
+</div>
+
+<div class="photo">
+<img id="previewPhoto">
+</div>
+
+<div class="content">
+
+<div class="section-title">Personal Details</div>
+<div class="row"><div class="label">Name</div><div id="p_name"></div></div>
+<div class="row"><div class="label">Date of Birth</div><div id="p_dob"></div></div>
+<div class="row"><div class="label">Place of Birth</div><div id="p_birth"></div></div>
+<div class="row"><div class="label">Rashi</div><div id="p_rashi"></div></div>
+<div class="row"><div class="label">Nakshatra</div><div id="p_nakshatra"></div></div>
+<div class="row"><div class="label">Height</div><div id="p_height"></div></div>
+<div class="row"><div class="label">Complexion</div><div id="p_complexion"></div></div>
+
+<div class="section-title">Education</div>
+<div id="p_education"></div>
+
+<div class="section-title">Family Details</div>
+<div class="row"><div class="label">Father</div><div id="p_father"></div></div>
+<div class="row"><div class="label">Mother</div><div id="p_mother"></div></div>
+<div class="row"><div class="label">Siblings</div><div id="p_siblings"></div></div>
+
+<div class="section-title">Address</div>
+<div id="p_address"></div>
+
+</div>
+
+<div class="footer">
+Designed & Developed by <strong>Mr. Shubh</strong>
+</div>
+
+</div>
+
+<button onclick="downloadPDF()" style="display:none;" id="pdfBtn">Download PDF</button>
+
+
+<script>
+function generateBiodata(){
+
+document.getElementById("biodata").style.display="flex";
+document.getElementById("pdfBtn").style.display="block";
+
+p_name.innerText = name.value;
+p_dob.innerText = dob.value;
+p_birth.innerText = birthplace.value;
+p_rashi.innerText = rashi.value;
+p_nakshatra.innerText = nakshatra.value;
+p_height.innerText = height.value;
+p_complexion.innerText = complexion.value;
+p_father.innerText = father.value;
+p_mother.innerText = mother.value;
+p_siblings.innerText = siblings.value;
+p_address.innerText = address.value;
+
+let eduList = education.value.split(",");
+p_education.innerHTML="";
+eduList.forEach(e=>{
+p_education.innerHTML += "• " + e + "<br>";
+});
+
+let file = photoInput.files[0];
+if(file){
+let reader = new FileReader();
+reader.onload=function(e){
+previewPhoto.src = e.target.result;
+}
+reader.readAsDataURL(file);
+}
+}
+
+function downloadPDF(){
+html2pdf().from(document.getElementById("biodata")).save("Hindu_Biodata.pdf");
+}
+</script>
+
+</body>
+</html>
