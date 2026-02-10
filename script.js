@@ -8,7 +8,7 @@ function scrollToTemplates(){
 }
 
 let count = 0;
-let target = 12487;
+let target = Math.floor(Math.random() * 10000) + 10000;
 
 function animateCounter(){
   let interval = setInterval(() => {
@@ -22,3 +22,4 @@ function animateCounter(){
 }
 
 window.addEventListener("load", animateCounter);
+
